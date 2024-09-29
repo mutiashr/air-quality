@@ -69,6 +69,51 @@ st.write("**Hasil Analisis:**")
 st.write("- **Scatter Plot**: Saat suhu turun, PM2.5 cenderung meningkat, menunjukkan hubungan negatif.")
 st.write("- **Korelasi**: Nilai korelasi negatif mengindikasikan suhu rendah berkaitan dengan peningkatan PM2.5.")
 
+# Pertanyaan 3
+st.subheader("Pertanyaan 3:  Apakah ada anomali dalam data polusi udara yang perlu diperhatikan?")
+
+# Menghitung Z-score untuk PM2.5
+data['PM2.5_zscore'] = (data['PM2.5'] - data['PM2.5'].mean()) / data['PM2.5'].std()
+
+# Definisikan threshold untuk mengidentifikasi anomali
+threshold = 3
+
+# Identifikasi anomali
+anomalies = data[data['PM2.5_zscore'].abs() > threshold]
+
+# Visualisasi PM2.5 dan sorot anomali
+plt.figure(figsize=(12, 6))
+plt.plot(data.index, data['PM2.5'], label='PM2.5 Levels', color='blue', alpha=0.5)
+plt.scatter(anomalies.index, anomalies['PM2.5'], color='red', label='Anomalies', s=50, zorder=5)
+plt.title('Deteksi Anomali PM2.5')
+plt.xlabel('Tanggal')
+plt.ylabel('PM2.5')
+plt.axhline(y=anomalies['PM2.5'].mean(), color='green', linestyle='--', label='Mean PM2.5')
+plt.axhline(y=anomalies['PM2.5'].mean() + threshold * data['PM2.5'].std(), color='orange', linestyle='--', label='Threshold +3')
+plt.axhline(y=anomalies['PM2.5'].mean() - threshold * data['PM2.5'].std(), color='orange', linestyle='--', label='Threshold -3')
+plt.legend()
+plt.grid()
+plt.tight_layout()
+
+# Menampilkan grafik di Streamlit
+st.pyplot(plt)
+
+# Menampilkan 10 anomali tertinggi
+top_10_anomalies = anomalies.nlargest(10, 'PM2.5')[['PM2.5', 'PM2.5_zscore']]
+
+# Menampilkan hasil
+st.subheader("10 Anomali Tertinggi:")
+st.write(top_10_anomalies)
+
+
+# Penjelasan Hasil Anomali Tertinggi
+st.subheader("Penjelasan Hasil Anomali Tertinggi:")
+st.write("1. Tanggal Anomali:")
+st.write("   - 8 Februari 2016 memiliki tiga anomali tinggi (941.0, 816.0, 707.0).")
+st.write("   - 28 Januari 2017 juga menunjukkan nilai tinggi, dengan 762.0 sebagai yang tertinggi.")
+st.write("2. Z-score:")
+st.write("   - Z-score di atas 6 menunjukkan bahwa nilai PM2.5 sangat jauh dari rata-rata, menandakan potensi krisis kualitas udara.")
+
 
 # Deskripsi Data
 st.subheader("Deskripsi Data")
@@ -77,7 +122,8 @@ Data yang dianalisis berfokus pada polusi udara di wilayah Shunyi, China, selama
 - **PM2.5**: Konsentrasi partikel halus di udara (<2.5 mikrometer) yang berbahaya karena dapat terhirup dan masuk ke aliran darah.
 - **Temperatur (TEMP)**: Suhu udara yang diukur, penting untuk memahami pengaruh cuaca terhadap polusi udara.
 - **Variabel cuaca lainnya**: Kecepatan angin, tekanan udara, dan curah hujan, yang memengaruhi distribusi polutan dan tingkat polusi.
-""")
+- **Penghitungan Z-score**: Z-score digunakan untuk mengukur seberapa jauh suatu nilai dari rata-rata data. Nilai dengan Z-score di atas ambang batas tertentu (biasanya 3) dianggap sebagai anomali.
+- **Identifikasi Anomali**: Data PM2.5 yang memiliki Z-score tinggi menunjukkan kejadian luar biasa dalam tingkat polusi, yang perlu diselidiki lebih lanjut.""")
 
 # Kesimpulan
 st.subheader("Kesimpulan")
@@ -90,3 +136,8 @@ st.write("2. **Hubungan Suhu dan PM2.5**:")
 st.write("- Saat suhu udara turun, tingkat PM2.5 cenderung meningkat.")
 st.write("- **Temuan**: Suhu yang lebih rendah berhubungan dengan peningkatan polusi udara.")
 st.write("- **Data**: Korelasi negatif antara suhu dan PM2.5 menunjukkan bahwa semakin rendah suhu, semakin tinggi tingkat polusi, kemungkinan disebabkan oleh angin yang lebih tenang di musim dingin.")
+
+st.write("3. **Anomali yang perlu diperhatikan:**")
+st.write("- **Krisis Kualitas Udara**: Anomali ini menunjukkan masalah serius dalam kualitas udara yang bisa disebabkan oleh kebakaran, aktivitas industri, atau cuaca ekstrem.")
+st.write("- **Kepentingan Monitoring**: Penting untuk memantau lebih lanjut tanggal-tanggal ini untuk memahami penyebab dan mengambil tindakan mitigasi.")
+st.write("- **Pengambilan Kebijakan**: Temuan ini dapat membantu dalam perumusan kebijakan untuk menangani polusi udara secara efektif.")
