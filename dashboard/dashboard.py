@@ -6,8 +6,7 @@ import seaborn as sns
 # Judul aplikasi
 st.title("Analisis Anomali PM2.5")
 
-# Membaca file CSV ke dalam DataFrame
-data = pd.read_csv('PRSA_Data_Shunyi_20130301-20170228.csv')
+data = pd.read_csv('dashboard/PRSA_Data_Shunyi_20130301-20170228.csv')
 
 # Lanjutkan dengan analisis data
 st.write(data)
