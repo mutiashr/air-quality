@@ -3,9 +3,14 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load dataset
-file_path = 'PRSA_Data_Shunyi_20130301-20170228.csv'
-data = pd.read_csv(file_path)
+# Judul aplikasi
+st.title("Analisis Anomali PM2.5")
+
+# Membaca file CSV ke dalam DataFrame
+data = pd.read_csv('PRSA_Data_Shunyi_20130301-20170228.csv')
+
+# Lanjutkan dengan analisis data
+st.write(data)
 
 # Data Cleaning and Preparation
 data['datetime'] = pd.to_datetime(data[['year', 'month', 'day', 'hour']])
